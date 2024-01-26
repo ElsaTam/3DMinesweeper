@@ -14,9 +14,11 @@ public class UIGameMenu : MonoBehaviour
     [SerializeField] private TMP_InputField sizeYInput;
     [SerializeField] private TMP_InputField sizeZInput;
     [SerializeField] private TMP_InputField numberOfBombsInput;
+    [SerializeField] private Toggle explosionToggle;
 
     private Vector3Int gridSize;
     private int numberOfBombs;
+    private bool useExplosion;
 
     private float fadeDuration = 1f;
 
@@ -29,6 +31,7 @@ public class UIGameMenu : MonoBehaviour
         sizeYInput.onEndEdit.AddListener(delegate{ValidateSizeInput(sizeYInput, 1);});
         sizeZInput.onEndEdit.AddListener(delegate{ValidateSizeInput(sizeZInput, 2);});
         numberOfBombsInput.onEndEdit.AddListener(delegate{ValidateNumberOfBombsInput();});
+        explosionToggle.onValueChanged.AddListener((bool useExplosion) => {this.useExplosion = useExplosion;});
     }
 
     private void Start()
@@ -100,6 +103,9 @@ public class UIGameMenu : MonoBehaviour
 
         numberOfBombs = CubesSystem.Instance.GetTotalBombCount();
         numberOfBombsInput.text = numberOfBombs.ToString();
+
+        useExplosion = CubesSystem.Instance.UseExplosion();
+        explosionToggle.isOn = useExplosion;
     }
 
     private void Appear()
@@ -148,7 +154,7 @@ public class UIGameMenu : MonoBehaviour
     {
         SetInteractable(false);
         StartCoroutine(Fade(GetComponent<CanvasGroup>(), 1, 0, FadeOutCompleted));
-        CubesSystem.Instance.RestartGame(gridSize, numberOfBombs);
+        CubesSystem.Instance.RestartGame(gridSize, numberOfBombs, useExplosion);
     }
 
     private void OnQuitClicked()

@@ -114,8 +114,15 @@ public class Cube : MonoBehaviour
     public void Explode(Action onExplosionComplete)
     {
         SetSelected(false);
-        if (hasBomb) meshRenderer.material = bombCubeMaterial;
-        GetComponent<ExplodeCube>().Run();
+        if (CubesSystem.Instance.UseExplosion())
+        {
+            if (hasBomb) meshRenderer.material = bombCubeMaterial;
+            GetComponent<ExplodeCube>().Run();
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         onExplosionComplete();
     }
 

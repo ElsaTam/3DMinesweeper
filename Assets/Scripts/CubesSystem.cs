@@ -20,6 +20,7 @@ public class CubesSystem : MonoBehaviour
     private bool isBusy = false;
     private Cube previouslySelectedCube;
     private Cube selectedCube;
+    private bool useExplosion;
 
     private void Awake()
     {
@@ -269,8 +270,9 @@ public class CubesSystem : MonoBehaviour
         OnGameStart?.Invoke(this, EventArgs.Empty);
     }
 
-    public void RestartGame(Vector3Int gridSize, int numberOfBombs)
+    public void RestartGame(Vector3Int gridSize, int numberOfBombs, bool useExplosion)
     {
+        this.useExplosion = useExplosion;
         gridSystem.Restart(gridSize, numberOfBombs);
         ClearBusy();
         OnGameStart?.Invoke(this, EventArgs.Empty);
@@ -307,5 +309,6 @@ public class CubesSystem : MonoBehaviour
 
     public Vector3Int GetGridSize() => gridSystem.GetGridSize();
     public int GetTotalBombCount() => gridSystem.GetTotalBombCount();
+    public bool UseExplosion() => useExplosion;
 
 }
