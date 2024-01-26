@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
 
     private void Start()
     {
+        playerInputActions.Player.CubeMovement.performed += _ => OnCubeMovement?.Invoke(this, EventArgs.Empty);
         playerInputActions.Player.LeftClick.performed += _ => OnLeftClick?.Invoke(this, EventArgs.Empty);
         playerInputActions.Player.RightClick.performed += _ => OnRightClick?.Invoke(this, EventArgs.Empty);
         playerInputActions.Player.DoubleClick.performed += _ => OnDoubleClick?.Invoke(this, EventArgs.Empty);
