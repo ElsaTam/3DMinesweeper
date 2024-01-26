@@ -94,7 +94,7 @@ public class UIGameMenu : MonoBehaviour
     private void CubesSystem_OnGameWon(object sender, EventArgs e)
     {
         finalText.text = "IT'S A WIN!";
-        finalText.color = Color.green;
+        finalText.color = restartButton.image.color;
         resumeButton.gameObject.SetActive(false);
         SetInput();
         Appear();
@@ -104,7 +104,7 @@ public class UIGameMenu : MonoBehaviour
     {
         Debug.Log("Lost");
         finalText.text = "GAME OVER";
-        finalText.color = Color.red;
+        finalText.color = quitButton.image.color;
         resumeButton.gameObject.SetActive(false);
         SetInput();
         Appear();
