@@ -8,7 +8,8 @@ using UnityEngine.UI;
 public class UIGameMenu : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI finalText;
-    [SerializeField] private Button startButton;
+    [SerializeField] private Button resumeButton;
+    [SerializeField] private Button restartButton;
     [SerializeField] private Button quitButton;
     [SerializeField] private TMP_InputField sizeXInput;
     [SerializeField] private TMP_InputField sizeYInput;
@@ -24,7 +25,8 @@ public class UIGameMenu : MonoBehaviour
 
     private void Awake()
     {
-        startButton.onClick.AddListener(OnStartClicked);
+        resumeButton.onClick.AddListener(OnResumeClicked);
+        restartButton.onClick.AddListener(OnStartClicked);
         quitButton.onClick.AddListener(OnQuitClicked);
 
         sizeXInput.onEndEdit.AddListener(delegate{ValidateSizeInput(sizeXInput, 0);});
@@ -39,6 +41,9 @@ public class UIGameMenu : MonoBehaviour
         InputManager.Instance.OnKeyTabPressed += InputManager_OnKeyTabPressed;
         CubesSystem.Instance.OnGameWon += CubesSystem_OnGameWon;
         CubesSystem.Instance.OnGameLost += CubesSystem_OnGameLost;
+        CubesSystem.Instance.OnGamePaused += CubesSystem_OnGamePaused;
+        CubesSystem.Instance.OnGameResumed += (_,_) => Disappear();
+        CubesSystem.Instance.OnGameStarted += (_,_) => Disappear();
 
         finalText.text = "MENU";
 
@@ -77,10 +82,20 @@ public class UIGameMenu : MonoBehaviour
         if (numberOfBombsInput.isFocused) sizeXInput.Select();
     }
 
+    private void CubesSystem_OnGamePaused(object sender, EventArgs e)
+    {
+        finalText.text = "MENU";
+        finalText.color = Color.white;
+        resumeButton.gameObject.SetActive(true);
+        SetInput();
+        Appear();
+    }
+
     private void CubesSystem_OnGameWon(object sender, EventArgs e)
     {
         finalText.text = "IT'S A WIN!";
         finalText.color = Color.green;
+        resumeButton.gameObject.SetActive(false);
         SetInput();
         Appear();
     }
@@ -90,9 +105,11 @@ public class UIGameMenu : MonoBehaviour
         Debug.Log("Lost");
         finalText.text = "GAME OVER";
         finalText.color = Color.red;
+        resumeButton.gameObject.SetActive(false);
         SetInput();
         Appear();
     }
+
 
     private void SetInput()
     {
@@ -110,8 +127,20 @@ public class UIGameMenu : MonoBehaviour
 
     private void Appear()
     {
-        gameObject.SetActive(true);
-        StartCoroutine(Fade(GetComponent<CanvasGroup>(), 0, 1, FadeInCompleted));
+        if (! gameObject.activeSelf)
+        {
+            gameObject.SetActive(true);
+            StartCoroutine(Fade(GetComponent<CanvasGroup>(), 0, 1, FadeInCompleted));
+        }
+    }
+
+    private void Disappear()
+    {
+        if (  gameObject.activeSelf)
+        {
+            SetInteractable(false);
+            StartCoroutine(Fade(GetComponent<CanvasGroup>(), 1, 0, FadeOutCompleted));
+        }
     }
 
     private IEnumerator Fade(CanvasGroup canvasGroup, float start, float end, Action onFadeComplete)
@@ -148,12 +177,13 @@ public class UIGameMenu : MonoBehaviour
     }
 
 
-
+    private void OnResumeClicked()
+    {
+        CubesSystem.Instance.ResumeGame();
+    }
 
     private void OnStartClicked()
     {
-        SetInteractable(false);
-        StartCoroutine(Fade(GetComponent<CanvasGroup>(), 1, 0, FadeOutCompleted));
         CubesSystem.Instance.RestartGame(gridSize, numberOfBombs, useExplosion);
     }
 

@@ -12,15 +12,17 @@ public class CubesSystem : MonoBehaviour
     [SerializeField] private LayerMask cubeLayerMask;
 
     public event EventHandler OnGamePaused;
-    public event EventHandler OnGameStart;
+    public event EventHandler OnGameResumed;
+    public event EventHandler OnGameStarted;
     public event EventHandler OnGameWon;
     public event EventHandler OnGameLost;
     
     private bool pointerOverUI;
-    private bool isBusy = false;
+    private bool isPaused;
+    private bool isBusy;
     private Cube previouslySelectedCube;
     private Cube selectedCube;
-    private bool useExplosion;
+    private bool useExplosion = true;
 
     private void Awake()
     {
@@ -39,10 +41,11 @@ public class CubesSystem : MonoBehaviour
         InputManager.Instance.OnRightClick += InputManager_OnRightClick;
         InputManager.Instance.OnDoubleClick += InputManager_OnDoubleClick;
         InputManager.Instance.OnCubeMovement += InputManager_OnCubeMovement;
+        InputManager.Instance.OnKeyEscapePressed += InputManager_OnKeyEscapePressed;
 
         Cube.OnAnyBombMarked += (_,_) => CheckWin();
 
-        OnGamePaused?.Invoke(this, EventArgs.Empty);
+        PauseGame();
     }
 
     private void Update()
@@ -251,23 +254,35 @@ public class CubesSystem : MonoBehaviour
 
     private void WinGame()
     {
-        SetBusy();
-        OnGamePaused?.Invoke(this, EventArgs.Empty);
+        PauseGame();
         OnGameWon?.Invoke(this, EventArgs.Empty);
     }
 
     private void LoseGame()
     {
+        PauseGame();
+        OnGameLost?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void PauseGame()
+    {
+        isPaused = true;
         SetBusy();
         OnGamePaused?.Invoke(this, EventArgs.Empty);
-        OnGameLost?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void ResumeGame()
+    {
+        isPaused = false;
+        ClearBusy();
+        OnGameResumed?.Invoke(this, EventArgs.Empty);
     }
 
     public void RestartGame()
     {
         gridSystem.Restart();
         ClearBusy();
-        OnGameStart?.Invoke(this, EventArgs.Empty);
+        OnGameStarted?.Invoke(this, EventArgs.Empty);
     }
 
     public void RestartGame(Vector3Int gridSize, int numberOfBombs, bool useExplosion)
@@ -275,7 +290,21 @@ public class CubesSystem : MonoBehaviour
         this.useExplosion = useExplosion;
         gridSystem.Restart(gridSize, numberOfBombs);
         ClearBusy();
-        OnGameStart?.Invoke(this, EventArgs.Empty);
+        OnGameStarted?.Invoke(this, EventArgs.Empty);
+    }
+
+
+
+    private void InputManager_OnKeyEscapePressed(object sender, EventArgs e)
+    {
+        if (isPaused)
+        {
+            ResumeGame();
+        }
+        else
+        {
+            PauseGame();
+        }
     }
 
 

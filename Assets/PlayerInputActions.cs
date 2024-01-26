@@ -89,6 +89,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""KeyEscape"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""eee400a1-6e7a-42b3-8d5d-f6df53d8fbac"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -234,6 +243,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""KeyTab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a556d060-f03a-4f87-9f9a-3472a09cd41e"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": ""Press(behavior=1)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""KeyEscape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -249,6 +269,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_RightClick = m_Player.FindAction("RightClick", throwIfNotFound: true);
         m_Player_DoubleClick = m_Player.FindAction("DoubleClick", throwIfNotFound: true);
         m_Player_KeyTab = m_Player.FindAction("KeyTab", throwIfNotFound: true);
+        m_Player_KeyEscape = m_Player.FindAction("KeyEscape", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -317,6 +338,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_RightClick;
     private readonly InputAction m_Player_DoubleClick;
     private readonly InputAction m_Player_KeyTab;
+    private readonly InputAction m_Player_KeyEscape;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -328,6 +350,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @RightClick => m_Wrapper.m_Player_RightClick;
         public InputAction @DoubleClick => m_Wrapper.m_Player_DoubleClick;
         public InputAction @KeyTab => m_Wrapper.m_Player_KeyTab;
+        public InputAction @KeyEscape => m_Wrapper.m_Player_KeyEscape;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -358,6 +381,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @KeyTab.started += instance.OnKeyTab;
             @KeyTab.performed += instance.OnKeyTab;
             @KeyTab.canceled += instance.OnKeyTab;
+            @KeyEscape.started += instance.OnKeyEscape;
+            @KeyEscape.performed += instance.OnKeyEscape;
+            @KeyEscape.canceled += instance.OnKeyEscape;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -383,6 +409,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @KeyTab.started -= instance.OnKeyTab;
             @KeyTab.performed -= instance.OnKeyTab;
             @KeyTab.canceled -= instance.OnKeyTab;
+            @KeyEscape.started -= instance.OnKeyEscape;
+            @KeyEscape.performed -= instance.OnKeyEscape;
+            @KeyEscape.canceled -= instance.OnKeyEscape;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -409,5 +438,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnRightClick(InputAction.CallbackContext context);
         void OnDoubleClick(InputAction.CallbackContext context);
         void OnKeyTab(InputAction.CallbackContext context);
+        void OnKeyEscape(InputAction.CallbackContext context);
     }
 }

@@ -18,7 +18,8 @@ public class CameraController : MonoBehaviour
         GridSystem.OnAnyGridSystemStarted += GridSystem_OnAnyGridSystemStarted;
 
         CubesSystem.Instance.OnGamePaused += (_, _) => softRotation = true;
-        CubesSystem.Instance.OnGameStart  += (_, _) => softRotation = false;
+        CubesSystem.Instance.OnGameResumed  += (_, _) => softRotation = false;
+        CubesSystem.Instance.OnGameStarted  += (_, _) => softRotation = false;
 
         softRotation = false;
     }

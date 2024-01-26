@@ -13,7 +13,7 @@ public class UIInGame : MonoBehaviour
         Cube.OnAnyBombMarked += (_, _) => UpdateBombCount();;
         Cube.OnAnyBombUnmarked += (_, _) => UpdateBombCount();
         CubesSystem.Instance.OnGamePaused += (_, _) => gameObject.SetActive(false);
-        CubesSystem.Instance.OnGameStart += CubesSystem_OnGameStart;
+        CubesSystem.Instance.OnGameStarted += CubesSystem_OnGameStart;
         UpdateBombCount();
         gameObject.SetActive(false);
     }

@@ -13,6 +13,7 @@ public class InputManager : MonoBehaviour
     public EventHandler OnDoubleClick;
     public EventHandler OnCubeMovement;
     public EventHandler OnKeyTabPressed;
+    public EventHandler OnKeyEscapePressed;
 
     private PlayerInputActions playerInputActions;
 
@@ -36,6 +37,7 @@ public class InputManager : MonoBehaviour
         playerInputActions.Player.RightClick.performed += _ => OnRightClick?.Invoke(this, EventArgs.Empty);
         playerInputActions.Player.DoubleClick.performed += _ => OnDoubleClick?.Invoke(this, EventArgs.Empty);
         playerInputActions.Player.KeyTab.performed += _ => OnKeyTabPressed?.Invoke(this, EventArgs.Empty);
+        playerInputActions.Player.KeyEscape.performed += _ => OnKeyEscapePressed?.Invoke(this, EventArgs.Empty);
     }
 
     public Vector2 GetMouseScreenPosition()
