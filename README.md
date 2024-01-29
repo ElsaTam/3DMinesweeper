@@ -4,7 +4,7 @@ This is a small project I made in a few hours to train myself with Unity.
 
 ## Download
 
-You can either download the file `3DMinesweeper.zip` and unzip it wherever you want on your computer. If you are on Windows x64, the executable should work.
+If you are on Windows x64, you can download the file `3DMinesweeper.zip` and unzip it wherever you want on your computer. Inside the folder, you will find the executable game file `3DMinesweeper.exe`. Run it to play the game (don't move it outside of the root folder, as it depends upon the other files).
 
 Otherwise, you can download the full project and build it within Unity (I used version `2022.3.17f1`).
 
@@ -20,7 +20,9 @@ First, choose the size of the 3D grid (between 3x3x3 and 10x10x10) and the numbe
 
 Once you start, you have a full 3D grid with grey blocks.
 
-Each of them has a double arrow printed on their faces, indicating the direction in which they can move. It is rarely useful, unless you destructed a block somewhere by error and want to place another one to retrieve the number of neighbouring bombs.
+You can rotate the camera around the grid with the key QWSD.
+
+Each of the cube has a double arrow printed on its faces, indicating the direction in which it can move. It is rarely useful, unless you destructed a block somewhere by error and want to place another one to retrieve the number of neighbouring bombs.
 
 In the top left corner, you have the number of the remaining bombs to find.
 
