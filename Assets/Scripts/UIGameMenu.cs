@@ -16,10 +16,16 @@ public class UIGameMenu : MonoBehaviour
     [SerializeField] private TMP_InputField sizeZInput;
     [SerializeField] private TMP_InputField numberOfBombsInput;
     [SerializeField] private Toggle explosionToggle;
+    [SerializeField] private Toggle neighbourFacesToggle;
+    [SerializeField] private Toggle neighbourEdgesToggle;
+    [SerializeField] private Toggle neighbourVerticesToggle;
 
     private Vector3Int gridSize;
     private int numberOfBombs;
     private bool useExplosion;
+    private bool neighbourFaces;
+    private bool neighbourEdges;
+    private bool neighbourVertices;
 
     private float fadeDuration = 1f;
 
@@ -34,6 +40,9 @@ public class UIGameMenu : MonoBehaviour
         sizeZInput.onEndEdit.AddListener(delegate{ValidateSizeInput(sizeZInput, 2);});
         numberOfBombsInput.onEndEdit.AddListener(delegate{ValidateNumberOfBombsInput();});
         explosionToggle.onValueChanged.AddListener((bool useExplosion) => {this.useExplosion = useExplosion;});
+        neighbourFacesToggle.onValueChanged.AddListener((bool neighbourFaces) => {neighbourFacesToggle.isOn = true;});
+        neighbourEdgesToggle.onValueChanged.AddListener((bool neighbourEdges) => {this.neighbourEdges = neighbourEdges;});
+        neighbourVerticesToggle.onValueChanged.AddListener((bool neighbourVertices) => {this.neighbourVertices = neighbourVertices;});
     }
 
     private void Start()
@@ -123,6 +132,15 @@ public class UIGameMenu : MonoBehaviour
 
         useExplosion = CubesSystem.Instance.UseExplosion();
         explosionToggle.isOn = useExplosion;
+
+        neighbourFaces = CubesSystem.Instance.UseFacesAsNeighbours();
+        neighbourFacesToggle.isOn = neighbourFaces;
+
+        neighbourEdges = CubesSystem.Instance.UseEdgesAsNeighbours();
+        neighbourEdgesToggle.isOn = neighbourEdges;
+
+        neighbourVertices = CubesSystem.Instance.UseVerticesAsNeighbours();
+        neighbourVerticesToggle.isOn = neighbourVertices;
     }
 
     private void Appear()
@@ -184,7 +202,7 @@ public class UIGameMenu : MonoBehaviour
 
     private void OnStartClicked()
     {
-        CubesSystem.Instance.RestartGame(gridSize, numberOfBombs, useExplosion);
+        CubesSystem.Instance.RestartGame(gridSize, numberOfBombs, useExplosion, neighbourFaces, neighbourEdges, neighbourVertices);
     }
 
     private void OnQuitClicked()

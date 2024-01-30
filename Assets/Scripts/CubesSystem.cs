@@ -285,10 +285,10 @@ public class CubesSystem : MonoBehaviour
         OnGameStarted?.Invoke(this, EventArgs.Empty);
     }
 
-    public void RestartGame(Vector3Int gridSize, int numberOfBombs, bool useExplosion)
+    public void RestartGame(Vector3Int gridSize, int numberOfBombs, bool useExplosion, bool neighbourFaces, bool neighbourEdges, bool neighbourVertices)
     {
         this.useExplosion = useExplosion;
-        gridSystem.Restart(gridSize, numberOfBombs);
+        gridSystem.Restart(gridSize, numberOfBombs, neighbourFaces, neighbourEdges, neighbourVertices);
         ClearBusy();
         OnGameStarted?.Invoke(this, EventArgs.Empty);
     }
@@ -339,5 +339,8 @@ public class CubesSystem : MonoBehaviour
     public Vector3Int GetGridSize() => gridSystem.GetGridSize();
     public int GetTotalBombCount() => gridSystem.GetTotalBombCount();
     public bool UseExplosion() => useExplosion;
+    public bool UseFacesAsNeighbours() => gridSystem.UseFacesAsNeighbours();
+    public bool UseEdgesAsNeighbours() => gridSystem.UseEdgesAsNeighbours();
+    public bool UseVerticesAsNeighbours() => gridSystem.UseVerticesAsNeighbours();
 
 }

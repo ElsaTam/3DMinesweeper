@@ -23,6 +23,9 @@ public class GridSystem : MonoBehaviour
     }
 
     private Cube[,,] cubeArray;
+    private bool neighbourFaces = true;
+    private bool neighbourEdges = false;
+    private bool neighbourVertices = false;
 
     private void Start()
     {
@@ -30,10 +33,13 @@ public class GridSystem : MonoBehaviour
         Cube.OnAnyCubeMoved += Cube_OnAnyCubeMoved;
     }
 
-    public void Restart(Vector3Int gridSize, int numberOfBombs)
+    public void Restart(Vector3Int gridSize, int numberOfBombs, bool neighbourFaces, bool neighbourEdges, bool neighbourVertices)
     {
         this.size = gridSize;
         this.numberOfBombs = numberOfBombs;
+        this.neighbourFaces = neighbourFaces;
+        this.neighbourEdges = neighbourEdges;
+        this.neighbourVertices = neighbourVertices;
         Restart();
     }
 
@@ -132,35 +138,32 @@ public class GridSystem : MonoBehaviour
 
         Vector3Int gridPosition = GetGridPosition(currentCube.GetPosition());
 
-        if (gridPosition.x - 1 >= 0)
+        for (int x = Mathf.Max(0, gridPosition.x - 1); x <= Mathf.Min(size.x-1, gridPosition.x + 1); ++x)
         {
-            Cube neighbourCube = GetCubeAtGridPosition(new Vector3Int(gridPosition.x - 1, gridPosition.y,     gridPosition.z    ));
-            if (neighbourCube != null) neighbourList.Add(neighbourCube);
-        }
-        if (gridPosition.y - 1 >= 0)
-        {
-            Cube neighbourCube = GetCubeAtGridPosition(new Vector3Int(gridPosition.x,     gridPosition.y - 1, gridPosition.z    ));
-            if (neighbourCube != null) neighbourList.Add(neighbourCube);
-        }
-        if (gridPosition.z - 1 >= 0)
-        {
-            Cube neighbourCube = GetCubeAtGridPosition(new Vector3Int(gridPosition.x,     gridPosition.y,     gridPosition.z - 1));
-            if (neighbourCube != null) neighbourList.Add(neighbourCube);
-        }
-        if (gridPosition.x + 1 < size.x)
-        {
-            Cube neighbourCube = GetCubeAtGridPosition(new Vector3Int(gridPosition.x + 1, gridPosition.y,     gridPosition.z    ));
-            if (neighbourCube != null) neighbourList.Add(neighbourCube);
-        }
-        if (gridPosition.y + 1 < size.y)
-        {
-            Cube neighbourCube = GetCubeAtGridPosition(new Vector3Int(gridPosition.x,     gridPosition.y + 1, gridPosition.z    ));
-            if (neighbourCube != null) neighbourList.Add(neighbourCube);
-        }
-        if (gridPosition.z + 1 < size.z)
-        {
-            Cube neighbourCube = GetCubeAtGridPosition(new Vector3Int(gridPosition.x,     gridPosition.y,     gridPosition.z + 1));
-            if (neighbourCube != null) neighbourList.Add(neighbourCube);
+            for (int y = Mathf.Max(0, gridPosition.y - 1); y <= Mathf.Min(size.y-1, gridPosition.y + 1); ++y)
+            {
+                for (int z = Mathf.Max(0, gridPosition.z - 1); z <= Mathf.Min(size.z-1, gridPosition.z + 1); ++z)
+                {
+                    int distance = Mathf.Abs(gridPosition.x - x) + Mathf.Abs(gridPosition.y - y) + Mathf.Abs(gridPosition.z - z);
+                    if (distance == 0) continue;
+
+                    Cube neighbourCube = GetCubeAtGridPosition(new Vector3Int(x, y, z));
+                    if (neighbourCube == null) continue;
+
+                    if (distance == 1 && neighbourFaces)
+                    {
+                        neighbourList.Add(neighbourCube);
+                    }
+                    else if (distance == 2 && neighbourEdges)
+                    {
+                        neighbourList.Add(neighbourCube);
+                    }
+                    else if (distance == 3 && neighbourVertices)
+                    {
+                        neighbourList.Add(neighbourCube);
+                    }
+                }
+            }
         }
 
         return neighbourList;
@@ -244,5 +247,8 @@ public class GridSystem : MonoBehaviour
     }
     public Cube[,,] GetCubeArray() => cubeArray;
     public int GetTotalBombCount() => numberOfBombs;
+    public bool UseFacesAsNeighbours() => neighbourFaces;
+    public bool UseEdgesAsNeighbours() => neighbourEdges;
+    public bool UseVerticesAsNeighbours() => neighbourVertices;
 
 }
