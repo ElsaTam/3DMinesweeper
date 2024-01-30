@@ -74,3 +74,6 @@ crashlytics-build.properties
 
 # Build folder
 3DMinesweeper/
+
+# Installer
+*.iss
