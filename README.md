@@ -4,7 +4,9 @@ This is a small project I made in a few hours to train myself with Unity.
 
 ## Download
 
-If you are on Windows x64, you can download the file `3DMinesweeper.zip` and unzip it wherever you want on your computer. Inside the folder, you will find the executable game file `3DMinesweeper.exe`. Run it to play the game (don't move it outside of the root folder, as it depends upon the other files).
+If you are on Windows x64, you can download the portable archive `3DMinesweeper.zip` and unzip it wherever you want on your computer. Inside the folder, you will find the executable game file `3DMinesweeper.exe`. Run it to play the game (don't move it outside of the root folder, as it depends upon the other files).
+
+You can also find an installer file at `Installer/3DMinesweeper Setup (x64).exe` and run it to locally install the game app.
 
 Otherwise, you can download the full project and build it within Unity (I used version `2022.3.17f1`).
 
@@ -15,6 +17,8 @@ As in a classic Minesweeper, the goal here is to find all the bombs hidden in th
 First, choose the size of the 3D grid (between 3x3x3 and 10x10x10) and the number of bombs (minimum 1). It will change the difficulty. I think that a good challenge is between 15% and 20% of bombs, but try as you like.
 
 > :warning: **Explosions**: when an empty cube is destroyed, it destroys it's neighbouring empty cubes too. The destruction is an explosion that breaks each cube in 4x4x4 small cubes. If you try for example the configuration `Grid Size = 10x10x10` and `Bombs = 1`, you will end up with an explosion of $(10^3 - 7) * 4^3 \approx 63k$ small cubes as soon as you destroy an empty one. You might have some performance issues, or even crash the game. In order to avoid this issue, disable Explosions by unchecking the box, and restart the game with the new parameters. Cubes will simply disappear.
+
+You can choose to also use edges and vertices to consider two cubes as adjacent and detect neighbouring cubes.
 
 ![Menu](Screenshot_Menu.jpg)
 
